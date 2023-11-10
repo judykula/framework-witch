@@ -1,0 +1,2 @@
+# AutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.jwy.witch.MyRedisAutoConfiguration
