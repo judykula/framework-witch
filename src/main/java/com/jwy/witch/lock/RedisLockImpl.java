@@ -11,12 +11,11 @@
  */
 package com.jwy.witch.lock;
 
+import com.jwy.witch.template.MyMainStringRedisTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -38,7 +37,7 @@ public class RedisLockImpl implements RedisLock{
     private final long TTL_DEFAULT =  TimeUnit.SECONDS.toMillis(30);
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;//TODO 因为涉及到分布式，这个需要全部在主库上操作，规避主从同步问题
+    private MyMainStringRedisTemplate redisTemplate;
 
     @Override
     public void close() throws IOException {
@@ -77,13 +76,13 @@ public class RedisLockImpl implements RedisLock{
         }
 
         /*尝试第一次直接设置锁*/
-        boolean done = this.stringRedisTemplate.opsForValue().setIfAbsent(lockKey, String.valueOf(expireValue4Set), Duration.ofMillis(expireTime));
+        boolean done = this.redisTemplate.opsForValue().setIfAbsent(lockKey, String.valueOf(expireValue4Set), Duration.ofMillis(expireTime));
         if(done) return true;
 
         /*尝试第二次，判断value-锁的持续时间设置锁*/
-        String valueOfGet = this.stringRedisTemplate.opsForValue().get(lockKey);
+        String valueOfGet = this.redisTemplate.opsForValue().get(lockKey);
         if(StringUtils.isEmpty(valueOfGet)){
-            boolean done2 = this.stringRedisTemplate.opsForValue().setIfAbsent(lockKey, String.valueOf(expireValue4Set), Duration.ofMillis(expireTime));
+            boolean done2 = this.redisTemplate.opsForValue().setIfAbsent(lockKey, String.valueOf(expireValue4Set), Duration.ofMillis(expireTime));
             return done2;
         }
         long expireTimeSeted = NumberUtils.toLong(valueOfGet);
@@ -92,12 +91,12 @@ public class RedisLockImpl implements RedisLock{
             return false;
         }else{
             //锁已经过期
-            String oldValue = this.stringRedisTemplate.opsForValue().getAndSet(lockKey, String.valueOf(expireValue4Set));
+            String oldValue = this.redisTemplate.opsForValue().getAndSet(lockKey, String.valueOf(expireValue4Set));
             if(null != oldValue && !valueOfGet.equals(oldValue)) {
                 //表示锁被其他人抢到了
                 return false;
             }
-            this.stringRedisTemplate.expire(lockKey, Duration.ofMillis(expireTime));
+            this.redisTemplate.expire(lockKey, Duration.ofMillis(expireTime));
             return true;
         }
     }
