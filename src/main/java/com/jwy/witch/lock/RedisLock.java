@@ -25,17 +25,6 @@ import java.io.Closeable;
 public interface RedisLock extends Closeable {
 
     /**
-     * 添加分布式锁，默认锁的过期时间为30s, 效果同acquire(lockKey, 30_000)
-     *
-     * ！如果没活上锁成功，会不断尝试，直至获取到锁为止
-     *
-     * @param lockKey
-     * @return true上锁成功&反之失败
-     * @throws RedisLockException
-     */
-    boolean acquire(String lockKey) throws RedisLockException;
-
-    /**
      * 添加上分布式锁，并指定锁的时间
      *
      * ！如果没活上锁成功，会不断尝试，直至获取到锁为止
@@ -56,18 +45,7 @@ public interface RedisLock extends Closeable {
      * @return
      * @throws RedisLockException
      */
-    boolean acquireTimeout(String lockKey, long ttl, long timeout) throws RedisLockException;
-
-    /**
-     * 尝试上分布式锁，默认锁的过期时间为30s，效果同tryAcquire(lockKey, 30_000)
-     *
-     * 不同于{@link #acquire(String, long)} 不会阻塞线程
-     *
-     * @param lockKey
-     * @return true上锁成功&反之失败
-     * @throws RedisLockException
-     */
-    boolean tryAcquire(String lockKey) throws RedisLockException;
+    boolean acquireTimeout(String lockKey, long ttl, long timeout) throws RedisLockException, InterruptedException;
 
     /**
      * 尝试上分布式锁，并指定锁的时间
