@@ -19,7 +19,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
@@ -37,11 +36,6 @@ public class RedisLockImpl implements RedisLock{
 
     @Autowired
     private MyMainStringRedisTemplate redisTemplate;
-
-    @Override
-    public void close() throws IOException {
-
-    }
 
     @Override
     public boolean acquire(String lockKey, long ttl) throws RedisLockException {

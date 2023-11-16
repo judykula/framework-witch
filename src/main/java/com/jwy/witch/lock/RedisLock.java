@@ -11,8 +11,6 @@
  */
 package com.jwy.witch.lock;
 
-import java.io.Closeable;
-
 /**
  * <p>
  *     定义Redis lock的接口
@@ -22,7 +20,7 @@ import java.io.Closeable;
  * @version 1.0
  * @date 2023/11/10
  */
-public interface RedisLock extends Closeable {
+public interface RedisLock{
 
     /**
      * 添加上分布式锁，并指定锁的时间
