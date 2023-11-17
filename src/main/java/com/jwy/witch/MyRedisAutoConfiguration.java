@@ -47,6 +47,10 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  *          @Autowired
  *          private RedisTemplate redisTemplate;
  *     </pre>
+ *
+ *     ！RedisTemplate 默认支持的是json序列化
+ *     如果你仅仅是存储String，使用{@link org.springframework.data.redis.core.StringRedisTemplate}
+ *     如果你想用自己的序列化进行存储，需要"自定义"template支持
  * </p>
  *
  * @author Jiang Wanyu
