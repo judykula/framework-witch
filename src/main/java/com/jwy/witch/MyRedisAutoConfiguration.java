@@ -11,6 +11,8 @@
  */
 package com.jwy.witch;
 
+import com.jwy.witch.lock.RedisLock;
+import com.jwy.witch.lock.RedisLockImpl;
 import com.jwy.witch.template.MyMainLettuceConnectionFactory;
 import com.jwy.witch.template.MyMainStringRedisTemplate;
 import io.lettuce.core.ReadFrom;
@@ -29,7 +31,22 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 
 /**
  * <p>
- *     redis模块
+ *     redis模块自定义内容在这里
+ * </p>
+ * <p>
+ *     使用分布式锁:
+ *     <pre>
+ *          @Autowired
+ *          private RedisLock redisLock;
+ *          ...
+ *     </pre>
+ * </p>
+ * <p>
+ *     使用redis：
+ *     <pre>
+ *          @Autowired
+ *          private RedisTemplate redisTemplate;
+ *     </pre>
  * </p>
  *
  * @author Jiang Wanyu
@@ -41,6 +58,16 @@ public class MyRedisAutoConfiguration {
 
     @Autowired
     private RedisProperties redisProperties;
+
+    /**
+     *  支持redis分布式锁
+     *
+     * @return {@link RedisLock}
+     */
+    @Bean
+    public RedisLock redisLock(){
+        return new RedisLockImpl();
+    }
 
     /**
      * 自定义Factory，支持"主从分离"

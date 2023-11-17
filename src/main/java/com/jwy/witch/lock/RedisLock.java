@@ -13,7 +13,7 @@ package com.jwy.witch.lock;
 
 /**
  * <p>
- *     定义Redis lock的接口
+ *     RedisLock定义了分布式锁的提供的方法
  * </p>
  *
  * @author Jiang Wanyu
@@ -26,6 +26,8 @@ public interface RedisLock{
      * 添加上分布式锁，并指定锁的时间
      *
      * ！如果没活上锁成功，会不断尝试，直至获取到锁为止
+     *
+     * 尽量使用{@link #acquireTimeout(String, long, long)}来代替当前方法
      *
      * @param lockKey
      * @param ttl 指定锁的时间, millisecond
