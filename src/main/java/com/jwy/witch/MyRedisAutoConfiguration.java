@@ -18,9 +18,11 @@ import com.jwy.witch.template.MyMainStringRedisTemplate;
 import io.lettuce.core.ReadFrom;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -81,6 +83,7 @@ public class MyRedisAutoConfiguration {
      * @return
      */
     @Bean
+    @Primary
     public LettuceConnectionFactory redisConnectionFactory() {
 
         if (null == redisProperties.getSentinel()) {
@@ -115,7 +118,7 @@ public class MyRedisAutoConfiguration {
      *
      * @return
      */
-    @Bean
+    @Bean("myMainLettuceConnectionFactory")
     public MyMainLettuceConnectionFactory myMainLettuceConnectionFactory(){
         if (null == redisProperties.getSentinel()) {
             LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder().build();
@@ -159,7 +162,7 @@ public class MyRedisAutoConfiguration {
      * @return
      */
     @Bean
-    public MyMainStringRedisTemplate myMainStringRedisTemplate(MyMainLettuceConnectionFactory redisConnectionFactory){
+    public MyMainStringRedisTemplate myMainStringRedisTemplate(@Qualifier("myMainLettuceConnectionFactory")MyMainLettuceConnectionFactory redisConnectionFactory){
         return new MyMainStringRedisTemplate(redisConnectionFactory);
     }
 
