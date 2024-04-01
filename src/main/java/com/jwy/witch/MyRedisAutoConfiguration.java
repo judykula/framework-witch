@@ -19,11 +19,12 @@ import io.lettuce.core.ReadFrom;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
@@ -60,6 +61,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @date 2023/11/8
  */
 @EnableConfigurationProperties(RedisProperties.class)
+@AutoConfigureBefore(RedisAutoConfiguration.class)
 public class MyRedisAutoConfiguration {
 
     @Autowired
